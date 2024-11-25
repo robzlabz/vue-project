@@ -6,9 +6,7 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      name: 'home',
-      component: HomeView,
-      meta: { requiresAuth: true }
+      redirect: '/dashboard'
     },
     {
       path: '/login',
@@ -23,10 +21,36 @@ const router = createRouter({
       meta: { guest: true }
     },
     {
-      path: '/about',
-      name: 'about',
-      component: () => import('../views/AboutView.vue'),
-      meta: { requiresAuth: true }
+      path: '/dashboard',
+      component: () => import('../views/dashboard/DashboardLayout.vue'),
+      meta: { requiresAuth: true },
+      children: [
+        {
+          path: '',
+          name: 'dashboard',
+          component: () => import('../views/dashboard/DashboardHome.vue')
+        },
+        {
+          path: 'sales',
+          name: 'sales',
+          component: () => import('../views/AboutView.vue')
+        },
+        {
+          path: 'purchases',
+          name: 'purchases',
+          component: () => import('../views/AboutView.vue')
+        },
+        {
+          path: 'items',
+          name: 'items',
+          component: () => import('../views/AboutView.vue')
+        },
+        {
+          path: 'reports',
+          name: 'reports',
+          component: () => import('../views/AboutView.vue')
+        }
+      ]
     },
   ],
 })

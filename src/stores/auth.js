@@ -7,23 +7,18 @@ export const useAuthStore = defineStore('auth', () => {
 
   const login = async ({ email, password }) => {
     try {
-      // Replace this with your actual API call
-      const response = await fetch('http://localhost:3000/api/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-      })
-
-      if (!response.ok) {
-        throw new Error('Login failed')
+      // Mock login - accept any credentials
+      const mockUser = {
+        email,
+        name: 'Test User',
+        id: 1
       }
+      const mockToken = 'mock-jwt-token'
 
-      const data = await response.json()
-      user.value = data.user
-      token.value = data.token
-      localStorage.setItem('token', data.token)
+      user.value = mockUser
+      token.value = mockToken
+      localStorage.setItem('token', mockToken)
+      return { user: mockUser, token: mockToken }
     } catch (error) {
       console.error('Login error:', error)
       throw error
@@ -32,21 +27,14 @@ export const useAuthStore = defineStore('auth', () => {
 
   const register = async ({ name, username, email, password }) => {
     try {
-      // Replace this with your actual API call
-      const response = await fetch('http://localhost:3000/api/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ name, username, email, password }),
-      })
-
-      if (!response.ok) {
-        throw new Error('Registration failed')
+      // Mock registration - accept any input
+      const mockUser = {
+        email,
+        name,
+        username,
+        id: 1
       }
-
-      const data = await response.json()
-      return data
+      return mockUser
     } catch (error) {
       console.error('Registration error:', error)
       throw error

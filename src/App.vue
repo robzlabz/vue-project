@@ -1,13 +1,14 @@
 <script setup>
-import { RouterLink, RouterView } from 'vue-router'
+import { RouterLink, RouterView, useRoute } from 'vue-router'
 import { useAuthStore } from './stores/auth'
 import HelloWorld from './components/HelloWorld.vue'
 
 const auth = useAuthStore()
+const $route = useRoute()
 </script>
 
 <template>
-  <header>
+  <header v-if="!$route.path.startsWith('/dashboard')">
     <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
 
     <div class="wrapper">
@@ -30,6 +31,20 @@ const auth = useAuthStore()
 
   <RouterView />
 </template>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+</style>
 
 <style scoped>
 header {
