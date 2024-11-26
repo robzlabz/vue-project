@@ -1,51 +1,54 @@
 <template>
-  <div class="login-container">
-    <div class="login-form">
-      <Card class="login-card">
+  <div class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md w-full space-y-8">
+      <Card class="bg-white shadow-lg rounded-lg">
         <template #title>
-          <h2 class="text-center mb-4">Selamat Datang Kembali</h2>
+          <h2 class="text-center text-2xl font-bold text-gray-900 mb-4">Selamat Datang Kembali</h2>
         </template>
         <template #content>
-          <form @submit.prevent="handleLogin" class="p-fluid">
-            <div class="field mb-4">
-              <span class="p-float-label">
+          <form @submit.prevent="handleLogin" class="space-y-6">
+            <div>
+              <span class="relative">
                 <InputText 
                   id="email" 
                   v-model="email" 
-                  :class="{'p-invalid': submitted && !email}"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  :class="{'border-red-500': submitted && !email}"
+                  placeholder="Email/Nama Pengguna"
                 />
-                <label for="email">Email/Nama Pengguna</label>
               </span>
-              <small v-if="submitted && !email" class="p-error">Email/Nama Pengguna diperlukan.</small>
+              <small v-if="submitted && !email" class="text-red-500 text-sm mt-1">Email/Nama Pengguna diperlukan.</small>
             </div>
 
-            <div class="field mb-4">
-              <span class="p-float-label">
+            <div>
+              <span class="relative">
                 <Password 
                   id="password" 
                   v-model="password" 
                   :feedback="false"
                   toggleMask
+                  class="w-full"
                   :class="{'p-invalid': submitted && !password}"
+                  inputClass="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="Kata Sandi"
                 />
-                <label for="password">Kata Sandi</label>
               </span>
-              <small v-if="submitted && !password" class="p-error">Kata Sandi diperlukan.</small>
+              <small v-if="submitted && !password" class="text-red-500 text-sm mt-1">Kata Sandi diperlukan.</small>
             </div>
 
-            <div class="flex align-items-center justify-content-between mb-4">
-              <div class="flex align-items-center">
-                <Checkbox v-model="rememberMe" id="rememberMe" :binary="true" />
-                <label for="rememberMe" class="ml-2">Ingat saya</label>
+            <div class="flex items-center justify-between">
+              <div class="flex items-center">
+                <Checkbox v-model="rememberMe" id="rememberMe" :binary="true" class="mr-2" />
+                <label for="rememberMe" class="text-sm text-gray-600">Ingat saya</label>
               </div>
-              <router-link to="/forgot-password" class="no-underline">Lupa kata sandi?</router-link>
+              <router-link to="/forgot-password" class="text-sm text-blue-600 hover:text-blue-800">Lupa kata sandi?</router-link>
             </div>
 
-            <Button type="submit" label="Masuk" class="mb-4 p-button-primary" />
+            <Button type="submit" label="Masuk" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md transition duration-200" />
             
-            <div class="text-center">
-              <span>Belum punya akun? </span>
-              <router-link to="register" class="font-bold no-underline">Daftar</router-link>
+            <div class="text-center text-sm">
+              <span class="text-gray-600">Belum punya akun? </span>
+              <router-link to="register" class="font-medium text-blue-600 hover:text-blue-800">Daftar</router-link>
             </div>
           </form>
         </template>
@@ -91,84 +94,3 @@ const handleLogin = async () => {
   }
 }
 </script>
-
-<style scoped>
-.login-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  background-color: #f4f4f4;
-}
-
-.login-form {
-  width: 100%;
-  max-width: 400px;
-  padding: 2rem;
-}
-
-.login-card {
-  background-color: #ffffff;
-  border-radius: 1rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.text-center {
-  text-align: center;
-}
-
-.mb-4 {
-  margin-bottom: 1.5rem;
-}
-
-.p-fluid {
-  width: 100%;
-}
-
-.field {
-  margin-bottom: 1.5rem;
-}
-
-.flex {
-  display: flex;
-}
-
-.align-items-center {
-  align-items: center;
-}
-
-.justify-content-between {
-  justify-content: space-between;
-}
-
-.ml-2 {
-  margin-left: 0.5rem;
-}
-
-.font-bold {
-  font-weight: bold;
-}
-
-.no-underline {
-  text-decoration: none;
-  color: #2196F3;
-}
-
-.p-button-primary {
-  background-color: #2196F3;
-  border-color: #2196F3;
-}
-
-.p-button-primary:hover {
-  background-color: #1976D2;
-  border-color: #1976D2;
-}
-
-h2 {
-  color: #333333;
-}
-
-label {
-  color: #555555;
-}
-</style>

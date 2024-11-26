@@ -1,82 +1,89 @@
 <template>
-  <div class="register-container">
-    <div class="register-form">
-      <Card class="register-card">
+  <div class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md w-full space-y-8">
+      <Card class="bg-white shadow-lg rounded-lg">
         <template #title>
-          <h2 class="text-center mb-4">Create Account</h2>
+          <h2 class="text-center text-2xl font-bold text-gray-900 mb-4">Create Account</h2>
         </template>
         <template #content>
-          <form @submit.prevent="handleRegister" class="p-fluid">
-            <div class="field mb-4">
-              <span class="p-float-label">
+          <form @submit.prevent="handleRegister" class="space-y-6">
+            <div>
+              <span class="relative">
                 <InputText 
                   id="name" 
                   v-model="name" 
-                  :class="{'p-invalid': submitted && !name}"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  :class="{'border-red-500': submitted && !name}"
+                  placeholder="Full Name"
                 />
-                <label for="name">Full Name</label>
               </span>
-              <small v-if="submitted && !name" class="p-error">Name is required.</small>
+              <small v-if="submitted && !name" class="text-red-500 text-sm mt-1">Name is required.</small>
             </div>
 
-            <div class="field mb-4">
-              <span class="p-float-label">
+            <div>
+              <span class="relative">
                 <InputText 
                   id="username" 
                   v-model="username" 
-                  :class="{'p-invalid': submitted && !username}"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  :class="{'border-red-500': submitted && !username}"
+                  placeholder="Username"
                 />
-                <label for="username">Username</label>
               </span>
-              <small v-if="submitted && !username" class="p-error">Username is required.</small>
+              <small v-if="submitted && !username" class="text-red-500 text-sm mt-1">Username is required.</small>
             </div>
 
-            <div class="field mb-4">
-              <span class="p-float-label">
+            <div>
+              <span class="relative">
                 <InputText 
                   id="email" 
                   type="email"
                   v-model="email" 
-                  :class="{'p-invalid': submitted && !email}"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  :class="{'border-red-500': submitted && !email}"
+                  placeholder="Email"
                 />
-                <label for="email">Email</label>
               </span>
-              <small v-if="submitted && !email" class="p-error">Email is required.</small>
+              <small v-if="submitted && !email" class="text-red-500 text-sm mt-1">Email is required.</small>
             </div>
 
-            <div class="field mb-4">
-              <span class="p-float-label">
+            <div>
+              <span class="relative">
                 <Password 
                   id="password" 
                   v-model="password" 
                   :toggleMask="true"
+                  class="w-full"
                   :class="{'p-invalid': submitted && !password}"
+                  inputClass="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="Password"
                 />
-                <label for="password">Password</label>
               </span>
-              <small v-if="submitted && !password" class="p-error">Password is required.</small>
+              <small v-if="submitted && !password" class="text-red-500 text-sm mt-1">Password is required.</small>
             </div>
 
-            <div class="field mb-4">
-              <span class="p-float-label">
+            <div>
+              <span class="relative">
                 <Password 
                   id="confirmPassword" 
                   v-model="confirmPassword" 
                   :toggleMask="true"
                   :feedback="false"
+                  class="w-full"
                   :class="{'p-invalid': submitted && !confirmPassword}"
+                  inputClass="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="Confirm Password"
                 />
-                <label for="confirmPassword">Confirm Password</label>
               </span>
-              <small v-if="submitted && !confirmPassword" class="p-error">Password confirmation is required.</small>
-              <small v-if="submitted && confirmPassword && password !== confirmPassword" class="p-error">Passwords do not match.</small>
+              <small v-if="submitted && !confirmPassword" class="text-red-500 text-sm mt-1">Password confirmation is required.</small>
+              <small v-if="submitted && confirmPassword && password !== confirmPassword" class="text-red-500 text-sm mt-1">Passwords do not match.</small>
             </div>
 
-            <Button type="submit" label="Sign Up" class="mb-4" />
+            <Button type="submit" label="Sign Up" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md transition duration-200" />
             
-            <div class="text-center">
-              <span>Already have an account? </span>
-              <router-link to="/login" class="font-bold no-underline">Sign in</router-link>
+            <div class="text-center text-sm">
+              <span class="text-gray-600">Already have an account? </span>
+              <router-link to="/login" class="font-medium text-blue-600 hover:text-blue-800">Sign in</router-link>
             </div>
           </form>
         </template>
@@ -128,49 +135,3 @@ const handleRegister = async () => {
   }
 }
 </script>
-
-<style scoped>
-.register-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  background-color: var(--surface-ground);
-}
-
-.register-form {
-  width: 100%;
-  max-width: 450px;
-  padding: 2rem;
-}
-
-.register-card {
-  background-color: var(--surface-card);
-  border-radius: 1rem;
-  box-shadow: 0 2px 1px -1px rgba(0,0,0,.2), 0 1px 1px 0 rgba(0,0,0,.14), 0 1px 3px 0 rgba(0,0,0,.12);
-}
-
-.text-center {
-  text-align: center;
-}
-
-.mb-4 {
-  margin-bottom: 1.5rem;
-}
-
-.p-fluid {
-  width: 100%;
-}
-
-.field {
-  margin-bottom: 1.5rem;
-}
-
-.font-bold {
-  font-weight: bold;
-}
-
-.no-underline {
-  text-decoration: none;
-}
-</style>
