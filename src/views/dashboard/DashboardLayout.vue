@@ -57,7 +57,7 @@
       </header>
       
       <div class="content">
-        <router-view></router-view>
+        <RouterView />
       </div>
     </main>
   </div>

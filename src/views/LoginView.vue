@@ -1,34 +1,55 @@
 <template>
   <div class="login-container">
     <div class="login-form">
-      <h2>Login</h2>
-      <form @submit.prevent="handleLogin">
-        <div class="form-group">
-          <label for="email">Email/Username</label>
-          <input 
-            type="text" 
-            id="email" 
-            v-model="email" 
-            required
-            placeholder="Enter email or username"
-          >
-        </div>
-        <div class="form-group">
-          <label for="password">Password</label>
-          <input 
-            type="password" 
-            id="password" 
-            v-model="password" 
-            required
-            placeholder="Enter password"
-          >
-        </div>
-        <button type="submit" class="submit-btn">Login</button>
-        <p class="register-link">
-          Don't have an account? 
-          <router-link to="/register">Register here</router-link>
-        </p>
-      </form>
+      <Card class="login-card">
+        <template #title>
+          <h2 class="text-center mb-4">Selamat Datang Kembali</h2>
+        </template>
+        <template #content>
+          <form @submit.prevent="handleLogin" class="p-fluid">
+            <div class="field mb-4">
+              <span class="p-float-label">
+                <InputText 
+                  id="email" 
+                  v-model="email" 
+                  :class="{'p-invalid': submitted && !email}"
+                />
+                <label for="email">Email/Nama Pengguna</label>
+              </span>
+              <small v-if="submitted && !email" class="p-error">Email/Nama Pengguna diperlukan.</small>
+            </div>
+
+            <div class="field mb-4">
+              <span class="p-float-label">
+                <Password 
+                  id="password" 
+                  v-model="password" 
+                  :feedback="false"
+                  toggleMask
+                  :class="{'p-invalid': submitted && !password}"
+                />
+                <label for="password">Kata Sandi</label>
+              </span>
+              <small v-if="submitted && !password" class="p-error">Kata Sandi diperlukan.</small>
+            </div>
+
+            <div class="flex align-items-center justify-content-between mb-4">
+              <div class="flex align-items-center">
+                <Checkbox v-model="rememberMe" id="rememberMe" :binary="true" />
+                <label for="rememberMe" class="ml-2">Ingat saya</label>
+              </div>
+              <router-link to="/forgot-password" class="no-underline">Lupa kata sandi?</router-link>
+            </div>
+
+            <Button type="submit" label="Masuk" class="mb-4 p-button-primary" />
+            
+            <div class="text-center">
+              <span>Belum punya akun? </span>
+              <router-link to="register" class="font-bold no-underline">Daftar</router-link>
+            </div>
+          </form>
+        </template>
+      </Card>
     </div>
   </div>
 </template>
@@ -37,22 +58,36 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
+import Card from 'primevue/card'
+import InputText from 'primevue/inputtext'
+import Password from 'primevue/password'
+import Checkbox from 'primevue/checkbox'
+import Button from 'primevue/button'
 
 const router = useRouter()
 const authStore = useAuthStore()
 
 const email = ref('')
 const password = ref('')
+const rememberMe = ref(false)
+const submitted = ref(false)
 
 const handleLogin = async () => {
+  submitted.value = true
+
+  if (!email.value || !password.value) {
+    return
+  }
+
   try {
     await authStore.login({
       email: email.value,
-      password: password.value
+      password: password.value,
+      rememberMe: rememberMe.value
     })
-    router.push('/')
+    router.push('/dashboard')
   } catch (error) {
-    console.error('Login failed:', error)
+    console.error('Login gagal:', error)
   }
 }
 </script>
@@ -63,69 +98,77 @@ const handleLogin = async () => {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background-color: #f5f5f5;
+  background-color: #f4f4f4;
 }
 
 .login-form {
-  background: white;
-  padding: 2rem;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   width: 100%;
   max-width: 400px;
+  padding: 2rem;
 }
 
-h2 {
+.login-card {
+  background-color: #ffffff;
+  border-radius: 1rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.text-center {
   text-align: center;
-  color: #333;
+}
+
+.mb-4 {
   margin-bottom: 1.5rem;
 }
 
-.form-group {
-  margin-bottom: 1rem;
+.p-fluid {
+  width: 100%;
+}
+
+.field {
+  margin-bottom: 1.5rem;
+}
+
+.flex {
+  display: flex;
+}
+
+.align-items-center {
+  align-items: center;
+}
+
+.justify-content-between {
+  justify-content: space-between;
+}
+
+.ml-2 {
+  margin-left: 0.5rem;
+}
+
+.font-bold {
+  font-weight: bold;
+}
+
+.no-underline {
+  text-decoration: none;
+  color: #2196F3;
+}
+
+.p-button-primary {
+  background-color: #2196F3;
+  border-color: #2196F3;
+}
+
+.p-button-primary:hover {
+  background-color: #1976D2;
+  border-color: #1976D2;
+}
+
+h2 {
+  color: #333333;
 }
 
 label {
-  display: block;
-  margin-bottom: 0.5rem;
-  color: #666;
-}
-
-input {
-  width: 100%;
-  padding: 0.75rem;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 1rem;
-}
-
-.submit-btn {
-  width: 100%;
-  padding: 0.75rem;
-  background-color: #4CAF50;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  font-size: 1rem;
-  cursor: pointer;
-  margin-top: 1rem;
-}
-
-.submit-btn:hover {
-  background-color: #45a049;
-}
-
-.register-link {
-  text-align: center;
-  margin-top: 1rem;
-}
-
-a {
-  color: #4CAF50;
-  text-decoration: none;
-}
-
-a:hover {
-  text-decoration: underline;
+  color: #555555;
 }
 </style>

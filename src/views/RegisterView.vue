@@ -1,67 +1,86 @@
 <template>
   <div class="register-container">
     <div class="register-form">
-      <h2>Register</h2>
-      <form @submit.prevent="handleRegister">
-        <div class="form-group">
-          <label for="name">Name</label>
-          <input 
-            type="text" 
-            id="name" 
-            v-model="name" 
-            required
-            placeholder="Enter your name"
-          >
-        </div>
-        <div class="form-group">
-          <label for="username">Username</label>
-          <input 
-            type="text" 
-            id="username" 
-            v-model="username" 
-            required
-            placeholder="Choose a username"
-          >
-        </div>
-        <div class="form-group">
-          <label for="email">Email</label>
-          <input 
-            type="email" 
-            id="email" 
-            v-model="email" 
-            required
-            placeholder="Enter your email"
-          >
-        </div>
-        <div class="form-group">
-          <label for="password">Password</label>
-          <input 
-            type="password" 
-            id="password" 
-            v-model="password" 
-            required
-            placeholder="Choose a password"
-          >
-        </div>
-        <div class="form-group">
-          <label for="confirmPassword">Confirm Password</label>
-          <input 
-            type="password" 
-            id="confirmPassword" 
-            v-model="confirmPassword" 
-            required
-            placeholder="Confirm your password"
-          >
-        </div>
-        <div v-if="error" class="error-message">
-          {{ error }}
-        </div>
-        <button type="submit" class="submit-btn">Register</button>
-        <p class="login-link">
-          Already have an account? 
-          <router-link to="/login">Login here</router-link>
-        </p>
-      </form>
+      <Card class="register-card">
+        <template #title>
+          <h2 class="text-center mb-4">Create Account</h2>
+        </template>
+        <template #content>
+          <form @submit.prevent="handleRegister" class="p-fluid">
+            <div class="field mb-4">
+              <span class="p-float-label">
+                <InputText 
+                  id="name" 
+                  v-model="name" 
+                  :class="{'p-invalid': submitted && !name}"
+                />
+                <label for="name">Full Name</label>
+              </span>
+              <small v-if="submitted && !name" class="p-error">Name is required.</small>
+            </div>
+
+            <div class="field mb-4">
+              <span class="p-float-label">
+                <InputText 
+                  id="username" 
+                  v-model="username" 
+                  :class="{'p-invalid': submitted && !username}"
+                />
+                <label for="username">Username</label>
+              </span>
+              <small v-if="submitted && !username" class="p-error">Username is required.</small>
+            </div>
+
+            <div class="field mb-4">
+              <span class="p-float-label">
+                <InputText 
+                  id="email" 
+                  type="email"
+                  v-model="email" 
+                  :class="{'p-invalid': submitted && !email}"
+                />
+                <label for="email">Email</label>
+              </span>
+              <small v-if="submitted && !email" class="p-error">Email is required.</small>
+            </div>
+
+            <div class="field mb-4">
+              <span class="p-float-label">
+                <Password 
+                  id="password" 
+                  v-model="password" 
+                  :toggleMask="true"
+                  :class="{'p-invalid': submitted && !password}"
+                />
+                <label for="password">Password</label>
+              </span>
+              <small v-if="submitted && !password" class="p-error">Password is required.</small>
+            </div>
+
+            <div class="field mb-4">
+              <span class="p-float-label">
+                <Password 
+                  id="confirmPassword" 
+                  v-model="confirmPassword" 
+                  :toggleMask="true"
+                  :feedback="false"
+                  :class="{'p-invalid': submitted && !confirmPassword}"
+                />
+                <label for="confirmPassword">Confirm Password</label>
+              </span>
+              <small v-if="submitted && !confirmPassword" class="p-error">Password confirmation is required.</small>
+              <small v-if="submitted && confirmPassword && password !== confirmPassword" class="p-error">Passwords do not match.</small>
+            </div>
+
+            <Button type="submit" label="Sign Up" class="mb-4" />
+            
+            <div class="text-center">
+              <span>Already have an account? </span>
+              <router-link to="/login" class="font-bold no-underline">Sign in</router-link>
+            </div>
+          </form>
+        </template>
+      </Card>
     </div>
   </div>
 </template>
@@ -70,6 +89,10 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
+import Card from 'primevue/card'
+import InputText from 'primevue/inputtext'
+import Password from 'primevue/password'
+import Button from 'primevue/button'
 
 const router = useRouter()
 const authStore = useAuthStore()
@@ -79,13 +102,16 @@ const username = ref('')
 const email = ref('')
 const password = ref('')
 const confirmPassword = ref('')
-const error = ref('')
+const submitted = ref(false)
 
 const handleRegister = async () => {
-  error.value = ''
-  
+  submitted.value = true
+
+  if (!name.value || !username.value || !email.value || !password.value || !confirmPassword.value) {
+    return
+  }
+
   if (password.value !== confirmPassword.value) {
-    error.value = 'Passwords do not match'
     return
   }
 
@@ -96,9 +122,9 @@ const handleRegister = async () => {
       email: email.value,
       password: password.value
     })
-    router.push('/login')
-  } catch (err) {
-    error.value = err.message || 'Registration failed'
+    router.push('/dashboard')
+  } catch (error) {
+    console.error('Registration failed:', error)
   }
 }
 </script>
@@ -109,75 +135,42 @@ const handleRegister = async () => {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background-color: #f5f5f5;
+  background-color: var(--surface-ground);
 }
 
 .register-form {
-  background: white;
-  padding: 2rem;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   width: 100%;
-  max-width: 400px;
+  max-width: 450px;
+  padding: 2rem;
 }
 
-h2 {
+.register-card {
+  background-color: var(--surface-card);
+  border-radius: 1rem;
+  box-shadow: 0 2px 1px -1px rgba(0,0,0,.2), 0 1px 1px 0 rgba(0,0,0,.14), 0 1px 3px 0 rgba(0,0,0,.12);
+}
+
+.text-center {
   text-align: center;
-  color: #333;
+}
+
+.mb-4 {
   margin-bottom: 1.5rem;
 }
 
-.form-group {
-  margin-bottom: 1rem;
-}
-
-label {
-  display: block;
-  margin-bottom: 0.5rem;
-  color: #666;
-}
-
-input {
+.p-fluid {
   width: 100%;
-  padding: 0.75rem;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 1rem;
 }
 
-.submit-btn {
-  width: 100%;
-  padding: 0.75rem;
-  background-color: #4CAF50;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  font-size: 1rem;
-  cursor: pointer;
-  margin-top: 1rem;
+.field {
+  margin-bottom: 1.5rem;
 }
 
-.submit-btn:hover {
-  background-color: #45a049;
+.font-bold {
+  font-weight: bold;
 }
 
-.login-link {
-  text-align: center;
-  margin-top: 1rem;
-}
-
-.error-message {
-  color: #dc3545;
-  margin-bottom: 1rem;
-  text-align: center;
-}
-
-a {
-  color: #4CAF50;
+.no-underline {
   text-decoration: none;
-}
-
-a:hover {
-  text-decoration: underline;
 }
 </style>
